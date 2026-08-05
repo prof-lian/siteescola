@@ -242,9 +242,12 @@ main{flex:1; display:flex; flex-wrap:wrap; gap:2.2vw; row-gap:2vh; padding:0 2.4
 .card:hover{transform:translateY(-3px) scale(1.04); box-shadow:0 8px 18px rgba(0,0,0,.4);}
 .card .titulo{font-size:21px; line-height:1.2;}
 .card .sub{display:block; font-size:13px; font-weight:600; opacity:.6; text-transform:uppercase; margin-top:3px;}
-footer{text-align:center; padding:0.8vh; opacity:.6; font-size:11px; flex-shrink:0;}
-.admin-gear{position:fixed; top:12px; right:14px; z-index:5; font-size:22px; line-height:1; text-decoration:none; opacity:.4; transition:.2s;}
-.admin-gear:hover{opacity:1; transform:rotate(35deg);}
+.site-footer{flex-shrink:0; display:flex; flex-direction:column; align-items:center; gap:6px; text-align:center; padding:0.4vh 12px 1vh;}
+.site-footer .extras{justify-content:center;}
+.foot-msg{font-size:15px; font-weight:700;}
+.foot-fixed{font-size:11px; opacity:.6; line-height:1.5;}
+.admin-gear{position:fixed; top:12px; right:14px; z-index:10; width:40px; height:40px; display:flex; align-items:center; justify-content:center; font-size:20px; line-height:1; text-decoration:none; background:rgba(255,255,255,.14); border-radius:50%; opacity:.9; transition:.2s;}
+.admin-gear:hover{opacity:1; transform:rotate(35deg); background:rgba(255,255,255,.26);}
 `;
 
 function esc(s){return (s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
@@ -255,7 +258,7 @@ function buildSiteHTML(c){
     const cards = t.jogos.map(j=>`<a class="card" href="${esc(j.url)}" target="_blank"><span class="titulo">${esc(j.titulo)}${j.sub?`<span class="sub">${esc(j.sub)}</span>`:''}</span></a>`).join('');
     return `<div class="turma"><h3>${esc(t.nome)}</h3><div class="cards">${cards}</div></div>`;
   }).join('');
-  return `<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0"><title>${esc(c.tituloEscola)}</title><style>${SITE_CSS}</style></head><body><div class="computador-decor"></div><a class="admin-gear" href="admin.html" title="Painel">⚙️</a><header><div class="brand"><img src="${esc(c.foto)}" alt="Foto do professor"><div><div class="titulo-wrap"><span class="emoji-pc">🖥️</span><h1>${esc(c.tituloEscola)}</h1></div><p>${esc(c.professor)}</p></div></div><div class="extras">${extras}</div></header><div class="hero"><h2>${esc(c.tituloEscola)} — ${esc(c.mes)}</h2></div><main>${turmas}</main><footer>Feito com 💙 para as aulas de informática</footer></body></html>`;
+  return `<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0"><title>${esc(c.tituloEscola)}</title><style>${SITE_CSS}</style></head><body><div class="computador-decor"></div><a class="admin-gear" href="admin.html" title="Painel">⚙️</a><header><div class="brand"><img src="${esc(c.foto)}" alt="Foto do professor"><div><div class="titulo-wrap"><span class="emoji-pc">🖥️</span><h1>${esc(c.tituloEscola)}</h1></div><p>${esc(c.professor)}</p></div></div></header><div class="hero"><h2>${esc(c.tituloEscola)} — ${esc(c.mes)}</h2></div><main>${turmas}</main><footer class="site-footer"><div class="extras foot-extras">${extras}</div>${c.mensagem?`<div class="foot-msg">${esc(c.mensagem)}</div>`:''}<div class="foot-fixed">Dúvidas e informações: Lian.ribeiro@edu.uberabadigital.br<br>© <span id="ano">${new Date().getFullYear()}</span> Professor de informática Lian Ribeiro</div></footer><script>document.getElementById('ano').textContent=new Date().getFullYear();<\/script></body></html>`;
 }
 
 /* ---------- ESTADO INICIAL ---------- */
@@ -264,6 +267,7 @@ let state = {
   tituloEscola: "Aulas de Computação",
   professor: "Professor Lian Ribeiro",
   mes: "Agosto",
+  mensagem: "Bons jogos, pessoal! 🎮",
   extras: [
     { titulo: "TUX-MATH", url: "https://tuxmath.org/index.html" },
     { titulo: "COLORIR", url: "https://aqua.adobe.com/draw/coloring-coast" }
@@ -295,7 +299,7 @@ const previewEl = document.getElementById('preview');
 function renderEditor(){
   const extrasHTML = state.extras.map((e,i)=>`
     <div class="item">
-      <div class="item-head"><strong>Botão superior ${i+1}</strong>
+      <div class="item-head"><strong>Botão extra ${i+1}</strong>
         <button class="btn-del" data-action="delExtra" data-i="${i}">Remover</button></div>
       <div class="row">
         <div class="field"><label>Nome</label><input data-kind="extra" data-i="${i}" data-key="titulo" value="${esc(e.titulo)}"></div>
@@ -334,12 +338,13 @@ function renderEditor(){
         <div class="field"><label>Mês</label><input data-field="mes" value="${esc(state.mes)}"></div>
         <div class="field"><label>Foto (URL)</label><input data-field="foto" value="${esc(state.foto)}"></div>
       </div>
+      <div class="field"><label>Mensagem do rodapé (pros alunos)</label><input data-field="mensagem" value="${esc(state.mensagem)}"></div>
     </div>
 
     <div class="section">
-      <h4>Botões superiores</h4>
+      <h4>Botões extras (rodapé)</h4>
       ${extrasHTML}
-      <button class="btn-add" data-action="addExtra">+ Adicionar botão superior</button>
+      <button class="btn-add" data-action="addExtra">+ Adicionar botão extra</button>
     </div>
 
     <div class="section">
