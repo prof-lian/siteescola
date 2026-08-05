@@ -22,8 +22,9 @@ body{margin:0; font-family:'Segoe UI', Verdana, sans-serif; background:#eef2f7; 
 .view{height:calc(100vh - 60px);}
 .login-overlay{position:fixed; inset:0; background:linear-gradient(160deg,#0a1a3a,#123a6b); display:flex; align-items:center; justify-content:center; z-index:50;}
 .login-box{background:#fff; padding:28px; border-radius:16px; width:100%; max-width:360px; box-shadow:0 20px 50px rgba(0,0,0,.35);}
-.login-box h2{margin:0 0 4px; color:#123a6b;}
-.login-sub{margin:0 0 18px; color:#8291a8; font-size:13px;}
+.login-box h2{margin:0 0 4px; color:#123a6b; text-align:center;}
+.login-sub{margin:0 0 18px; color:#8291a8; font-size:13px; text-align:center;}
+.login-foto{display:block; width:92px; height:92px; border-radius:50%; object-fit:cover; margin:0 auto 12px; border:3px solid #123a6b;}
 .login-box .field{margin-bottom:12px;}
 .login-box .field label{display:block; font-size:12px; font-weight:700; color:#5b6b85; margin-bottom:4px;}
 .login-box .field input{width:100%; padding:10px 12px; border:1px solid #c3cfdf; border-radius:8px; font-size:14px;}
@@ -104,8 +105,9 @@ body{margin:0; font-family:'Segoe UI', Verdana, sans-serif; background:#eef2f7; 
 
 <div id="login" class="login-overlay">
   <div class="login-box">
-    <h2>🖥️ Painel do Laboratório</h2>
-    <p class="login-sub">Entre para editar e publicar</p>
+    <img class="login-foto" src="https://aniversariomariah22.my.canva.site/jgg/_assets/media/e51924df3888b4556d8a33aedcdc2ffc.png" alt="Professor Lian">
+    <h2>Professor Lian</h2>
+    <p class="login-sub">Painel do Laboratório</p>
     <div class="field"><label>E-mail</label><input id="loginEmail" type="email" autocomplete="username"></div>
     <div class="field"><label>Senha</label><input id="loginSenha" type="password" autocomplete="current-password"></div>
     <button id="btnLogin" class="login-btn">Entrar</button>
@@ -241,6 +243,8 @@ main{flex:1; display:flex; flex-wrap:wrap; gap:2.2vw; row-gap:2vh; padding:0 2.4
 .card .titulo{font-size:21px; line-height:1.2;}
 .card .sub{display:block; font-size:13px; font-weight:600; opacity:.6; text-transform:uppercase; margin-top:3px;}
 footer{text-align:center; padding:0.8vh; opacity:.6; font-size:11px; flex-shrink:0;}
+.admin-gear{position:fixed; top:12px; right:14px; z-index:5; font-size:22px; line-height:1; text-decoration:none; opacity:.4; transition:.2s;}
+.admin-gear:hover{opacity:1; transform:rotate(35deg);}
 `;
 
 function esc(s){return (s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
@@ -251,7 +255,7 @@ function buildSiteHTML(c){
     const cards = t.jogos.map(j=>`<a class="card" href="${esc(j.url)}" target="_blank"><span class="titulo">${esc(j.titulo)}${j.sub?`<span class="sub">${esc(j.sub)}</span>`:''}</span></a>`).join('');
     return `<div class="turma"><h3>${esc(t.nome)}</h3><div class="cards">${cards}</div></div>`;
   }).join('');
-  return `<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0"><title>${esc(c.tituloEscola)}</title><style>${SITE_CSS}</style></head><body><div class="computador-decor"></div><header><div class="brand"><img src="${esc(c.foto)}" alt="Foto do professor"><div><div class="titulo-wrap"><span class="emoji-pc">🖥️</span><h1>${esc(c.tituloEscola)}</h1></div><p>${esc(c.professor)}</p></div></div><div class="extras">${extras}</div></header><div class="hero"><h2>${esc(c.tituloEscola)} — ${esc(c.mes)}</h2></div><main>${turmas}</main><footer>Feito com 💙 para as aulas de informática</footer></body></html>`;
+  return `<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0"><title>${esc(c.tituloEscola)}</title><style>${SITE_CSS}</style></head><body><div class="computador-decor"></div><a class="admin-gear" href="admin.html" title="Painel">⚙️</a><header><div class="brand"><img src="${esc(c.foto)}" alt="Foto do professor"><div><div class="titulo-wrap"><span class="emoji-pc">🖥️</span><h1>${esc(c.tituloEscola)}</h1></div><p>${esc(c.professor)}</p></div></div><div class="extras">${extras}</div></header><div class="hero"><h2>${esc(c.tituloEscola)} — ${esc(c.mes)}</h2></div><main>${turmas}</main><footer>Feito com 💙 para as aulas de informática</footer></body></html>`;
 }
 
 /* ---------- ESTADO INICIAL ---------- */
@@ -402,6 +406,14 @@ async function loadHistoricoFromCloud(){
   }catch(err){ alert('Erro ao carregar histórico: '+err.message); }
 }
 
+async function salvarVersao(label){
+  await addDoc(collection(db,'versoes'), {
+    label, savedAt:new Date().toLocaleDateString('pt-BR'),
+    createdAt: serverTimestamp(), config: deep(state)
+  });
+  await loadHistoricoFromCloud();
+}
+
 function renderHistorico(){
   histEl.innerHTML = historico.map(h=>`
     <div class="hist-card" data-id="${h.id}">
@@ -433,12 +445,8 @@ histEl.addEventListener('click', e=>{
 document.getElementById('btnSalvarHist').onclick = async ()=>{
   const label = (document.getElementById('labelHist').value.trim()) || `${state.mes}`;
   try{
-    await addDoc(collection(db,'versoes'), {
-      label, savedAt:new Date().toLocaleDateString('pt-BR'),
-      createdAt: serverTimestamp(), config: deep(state)
-    });
+    await salvarVersao(label);
     document.getElementById('labelHist').value='';
-    await loadHistoricoFromCloud();
     alert('Versão salva no histórico.');
   }catch(err){ alert('Erro ao salvar: '+err.message); }
 };
@@ -500,7 +508,11 @@ async function publish(){
     const body={message:'Atualiza site ('+state.mes+')', content:b64utf8(buildSiteHTML(state)), branch:pubConfig.branch};
     if(sha) body.sha=sha;
     const r=await fetch(base, {method:'PUT', headers, body:JSON.stringify(body)});
-    if(r.ok){ setPub('✅ Publicado!', 'https://'+pubConfig.owner+'.github.io/'+pubConfig.repo+'/'); }
+    if(r.ok){
+      setPub('✅ Publicado!', 'https://'+pubConfig.owner+'.github.io/'+pubConfig.repo+'/');
+      const label = (document.getElementById('labelHist').value.trim()) || state.mes;
+      try{ await salvarVersao(label); document.getElementById('labelHist').value=''; }catch(e){}
+    }
     else { const e=await r.json().catch(()=>({})); setPub('Erro: '+(e.message||('HTTP '+r.status))); }
   }catch(err){ setPub('Falha de rede: '+err.message); }
 }
