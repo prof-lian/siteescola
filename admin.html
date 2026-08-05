@@ -258,7 +258,9 @@ function buildSiteHTML(c){
     const cards = t.jogos.map(j=>`<a class="card" href="${esc(j.url)}" target="_blank"><span class="titulo">${esc(j.titulo)}${j.sub?`<span class="sub">${esc(j.sub)}</span>`:''}</span></a>`).join('');
     return `<div class="turma"><h3>${esc(t.nome)}</h3><div class="cards">${cards}</div></div>`;
   }).join('');
-  return `<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0"><title>${esc(c.tituloEscola)}</title><style>${SITE_CSS}</style></head><body><div class="computador-decor"></div><a class="admin-gear" href="admin.html" title="Painel">⚙️</a><header><div class="brand"><img src="${esc(c.foto)}" alt="Foto do professor"><div><div class="titulo-wrap"><span class="emoji-pc">🖥️</span><h1>${esc(c.tituloEscola)}</h1></div><p>${esc(c.professor)}</p></div></div></header><div class="hero"><h2>${esc(c.tituloEscola)} — ${esc(c.mes)}</h2></div><main>${turmas}</main><footer class="site-footer"><div class="extras foot-extras">${extras}</div>${c.mensagem?`<div class="foot-msg">${esc(c.mensagem)}</div>`:''}<div class="foot-fixed">Dúvidas e informações: Lian.ribeiro@edu.uberabadigital.br<br>© <span id="ano">${new Date().getFullYear()}</span> Professor de informática Lian Ribeiro</div></footer><script>document.getElementById('ano').textContent=new Date().getFullYear();<\/script></body></html>`;
+  const bgStyle = c.bgImage ? ` style="background:linear-gradient(rgba(6,16,40,.72),rgba(9,26,58,.82)), url('${c.bgImage}') center/cover fixed;"` : '';
+  const decorDiv = c.bgImage ? '' : '<div class="computador-decor"></div>';
+  return `<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0"><link rel="icon" href="${esc(c.foto)}"><title>Aulas Profe Lian</title><style>${SITE_CSS}</style></head><body${bgStyle}>${decorDiv}<a class="admin-gear" href="admin.html" title="Painel">⚙️</a><header><div class="brand"><img src="${esc(c.foto)}" alt="Foto do professor"><div><div class="titulo-wrap"><span class="emoji-pc">🖥️</span><h1>${esc(c.tituloEscola)}</h1></div><p>${esc(c.professor)}</p></div></div></header><div class="hero"><h2>${esc(c.tituloEscola)} — ${esc(c.mes)}</h2></div><main>${turmas}</main><footer class="site-footer"><div class="extras foot-extras">${extras}</div>${c.mensagem?`<div class="foot-msg">${esc(c.mensagem)}</div>`:''}<div class="foot-fixed">Dúvidas e informações: Lian.ribeiro@edu.uberabadigital.br<br>© <span id="ano">${new Date().getFullYear()}</span> Professor de informática Lian Ribeiro</div></footer><script>document.getElementById('ano').textContent=new Date().getFullYear();<\/script></body></html>`;
 }
 
 /* ---------- ESTADO INICIAL ---------- */
@@ -268,6 +270,7 @@ let state = {
   professor: "Professor Lian Ribeiro",
   mes: "Agosto",
   mensagem: "Bons jogos, pessoal! 🎮",
+  bgImage: "",
   extras: [
     { titulo: "TUX-MATH", url: "https://tuxmath.org/index.html" },
     { titulo: "COLORIR", url: "https://aqua.adobe.com/draw/coloring-coast" }
@@ -339,6 +342,10 @@ function renderEditor(){
         <div class="field"><label>Foto (URL)</label><input data-field="foto" value="${esc(state.foto)}"></div>
       </div>
       <div class="field"><label>Mensagem do rodapé (pros alunos)</label><input data-field="mensagem" value="${esc(state.mensagem)}"></div>
+      <div class="field"><label>Imagem de fundo do site (opcional)</label>
+        <input type="file" id="bgFile" accept="image/*">
+        ${state.bgImage?`<div style="margin-top:8px;"><img src="${state.bgImage}" style="max-width:100%; border-radius:8px; display:block; margin-bottom:6px;"><button class="btn-del" data-action="delBg">Remover fundo</button></div>`:''}
+      </div>
     </div>
 
     <div class="section">
@@ -370,6 +377,31 @@ editorEl.addEventListener('input', e=>{
   schedulePreview();
 });
 
+editorEl.addEventListener('change', e=>{
+  if(e.target.id==='bgFile' && e.target.files[0]) handleBgFile(e.target.files[0]);
+});
+
+function handleBgFile(file){
+  const reader = new FileReader();
+  reader.onload = ev=>{
+    const img = new Image();
+    img.onload = ()=>{
+      const maxW=1366, maxH=1366;
+      let w=img.width, h=img.height;
+      const r=Math.min(maxW/w, maxH/h, 1);
+      w=Math.round(w*r); h=Math.round(h*r);
+      const cv=document.createElement('canvas'); cv.width=w; cv.height=h;
+      cv.getContext('2d').drawImage(img,0,0,w,h);
+      let q=0.62, url;
+      do { url=cv.toDataURL('image/jpeg', q); q-=0.12; } while(url.length>950000 && q>0.2);
+      state.bgImage=url;
+      renderEditor(); updatePreview();
+    };
+    img.src=ev.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
 /* add/remove */
 editorEl.addEventListener('click', e=>{
   const b = e.target.closest('[data-action]'); if(!b) return;
@@ -380,6 +412,7 @@ editorEl.addEventListener('click', e=>{
   else if(a==='delTurma') state.turmas.splice(+b.dataset.t,1);
   else if(a==='addJogo') state.turmas[+b.dataset.t].jogos.push({titulo:'',sub:'',url:''});
   else if(a==='delJogo') state.turmas[+b.dataset.t].jogos.splice(+b.dataset.j,1);
+  else if(a==='delBg') state.bgImage='';
   renderEditor(); schedulePreview();
 });
 
