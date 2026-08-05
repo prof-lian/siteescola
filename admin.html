@@ -194,7 +194,9 @@ main{flex:1; display:flex; flex-wrap:wrap; gap:2.2vw; row-gap:2vh; padding:0 2.4
 .turma h3{color:#fff; text-align:center; font-size:clamp(14px,1.7vw,18px); margin:0 0 12px; font-weight:800; letter-spacing:.4px; flex-shrink:0;}
 .cards{display:flex; flex-direction:column; justify-content:center; align-items:center; gap:20px; width:100%;}
 .card{display:flex; align-items:center; justify-content:center; text-align:center; width:270px; height:88px;
-  background:#fff; color:#123a6b; border-radius:18px; text-decoration:none; font-weight:800; padding:8px 12px; flex-shrink:0;}
+  background:#fff; color:#123a6b; border-radius:18px; text-decoration:none; font-weight:800; padding:8px 12px; flex-shrink:0;
+  transition:.2s transform,.2s box-shadow;}
+.card:hover{transform:translateY(-3px) scale(1.04); box-shadow:0 8px 18px rgba(0,0,0,.4);}
 .card .titulo{font-size:21px; line-height:1.2;}
 .card .sub{display:block; font-size:13px; font-weight:600; opacity:.6; text-transform:uppercase; margin-top:3px;}
 footer{text-align:center; padding:0.8vh; opacity:.6; font-size:11px; flex-shrink:0;}
@@ -208,7 +210,7 @@ function buildSiteHTML(c){
     const cards = t.jogos.map(j=>`<a class="card" href="${esc(j.url)}" target="_blank"><span class="titulo">${esc(j.titulo)}${j.sub?`<span class="sub">${esc(j.sub)}</span>`:''}</span></a>`).join('');
     return `<div class="turma"><h3>${esc(t.nome)}</h3><div class="cards">${cards}</div></div>`;
   }).join('');
-  return `<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(c.tituloEscola)}</title><style>${SITE_CSS}</style></head><body><div class="computador-decor"></div><header><div class="brand"><img src="${esc(c.foto)}" alt="Foto do professor"><div><div class="titulo-wrap"><span class="emoji-pc">🖥️</span><h1>${esc(c.tituloEscola)}</h1></div><p>${esc(c.professor)}</p></div></div><div class="extras">${extras}</div></header><div class="hero"><h2>${esc(c.tituloEscola)} — ${esc(c.mes)}</h2></div><main>${turmas}</main><footer>Feito com 💙 para as aulas de informática</footer></body></html>`;
+  return `<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0"><title>${esc(c.tituloEscola)}</title><style>${SITE_CSS}</style></head><body><div class="computador-decor"></div><header><div class="brand"><img src="${esc(c.foto)}" alt="Foto do professor"><div><div class="titulo-wrap"><span class="emoji-pc">🖥️</span><h1>${esc(c.tituloEscola)}</h1></div><p>${esc(c.professor)}</p></div></div><div class="extras">${extras}</div></header><div class="hero"><h2>${esc(c.tituloEscola)} — ${esc(c.mes)}</h2></div><main>${turmas}</main><footer>Feito com 💙 para as aulas de informática</footer></body></html>`;
 }
 
 /* ---------- ESTADO INICIAL ---------- */
