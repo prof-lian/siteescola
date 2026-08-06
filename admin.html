@@ -186,7 +186,7 @@ body{margin:0; font-family:'Segoe UI', Verdana, sans-serif; background:#eef2f7; 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getFirestore, collection, addDoc, getDocs, getDoc, setDoc, deleteDoc, doc, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBaaUk8JhiPUF8iSPQDYJmS2RdGWZgL-G8",
@@ -524,7 +524,7 @@ function b64utf8(str){
 }
 document.getElementById('btnConfigPub').onclick = openPub;
 document.getElementById('pubCancel').onclick = ()=> modalPub.hidden=true;
-document.getElementById('pubSave').onclick = ()=>{
+document.getElementById('pubSave').onclick = async ()=>{
   pubConfig = {
     owner: pubOwner.value.trim(), repo: pubRepo.value.trim(),
     branch: (pubBranch.value.trim()||'main'), path: (pubPath.value.trim()||'index.html'),
@@ -532,7 +532,19 @@ document.getElementById('pubSave').onclick = ()=>{
   };
   lsSet('pubConfig', JSON.stringify(pubConfig));
   modalPub.hidden=true; setPub('Configuração salva.');
+  try{ await setDoc(doc(db,'config','publicacao'), pubConfig); }
+  catch(e){ setPub('Salvo neste navegador. Nuvem falhou: '+e.message); }
 };
+
+async function loadPubConfigFromCloud(){
+  try{
+    const s = await getDoc(doc(db,'config','publicacao'));
+    if(s.exists()){
+      pubConfig = Object.assign({owner:'',repo:'',branch:'main',path:'index.html',token:''}, s.data());
+      lsSet('pubConfig', JSON.stringify(pubConfig));
+    }
+  }catch(e){}
+}
 
 async function publish(){
   if(!pubConfig.owner || !pubConfig.repo || !pubConfig.token){ openPub(); return; }
@@ -570,7 +582,7 @@ document.getElementById('loginSenha').addEventListener('keydown', e=>{ if(e.key=
 document.getElementById('btnSair').onclick = ()=> signOut(auth);
 
 onAuthStateChanged(auth, user=>{
-  if(user){ loginEl.hidden=true; appEl.hidden=false; loadHistoricoFromCloud(); }
+  if(user){ loginEl.hidden=true; appEl.hidden=false; loadHistoricoFromCloud(); loadPubConfigFromCloud(); }
   else { loginEl.hidden=false; appEl.hidden=true; }
 });
 
