@@ -444,11 +444,17 @@ async function loadHistoricoFromCloud(){
   }catch(err){ alert('Erro ao carregar histórico: '+err.message); }
 }
 
-async function salvarVersao(label){
-  await addDoc(collection(db,'versoes'), {
-    label, savedAt:new Date().toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'}),
-    createdAt: serverTimestamp(), config: deep(state)
-  });
+async function salvarVersao(raw){
+  const savedAt = new Date().toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
+  const dados = { savedAt, createdAt: serverTimestamp(), config: deep(state) };
+  if(raw){
+    await addDoc(collection(db,'versoes'), Object.assign({label: raw}, dados));
+  } else if(historico.length){
+    const alvo = historico[0];
+    await setDoc(doc(db,'versoes', alvo.id), Object.assign({label: alvo.label}, dados));
+  } else {
+    await addDoc(collection(db,'versoes'), Object.assign({label: state.mes}, dados));
+  }
   await loadHistoricoFromCloud();
 }
 
@@ -481,11 +487,11 @@ histEl.addEventListener('click', e=>{
 });
 
 document.getElementById('btnSalvarHist').onclick = async ()=>{
-  const label = (document.getElementById('labelHist').value.trim()) || `${state.mes}`;
+  const raw = document.getElementById('labelHist').value.trim();
   try{
-    await salvarVersao(label);
+    await salvarVersao(raw);
     document.getElementById('labelHist').value='';
-    alert('Versão salva no histórico.');
+    alert(raw ? 'Nova versão salva no histórico.' : 'Última versão atualizada.');
   }catch(err){ alert('Erro ao salvar: '+err.message); }
 };
 
@@ -560,8 +566,8 @@ async function publish(){
     const r=await fetch(base, {method:'PUT', headers, body:JSON.stringify(body)});
     if(r.ok){
       setPub('✅ Publicado!', 'https://'+pubConfig.owner+'.github.io/'+pubConfig.repo+'/');
-      const label = (document.getElementById('labelHist').value.trim()) || state.mes;
-      try{ await salvarVersao(label); document.getElementById('labelHist').value=''; }catch(e){}
+      const raw = document.getElementById('labelHist').value.trim();
+      try{ await salvarVersao(raw); document.getElementById('labelHist').value=''; }catch(e){}
     }
     else { const e=await r.json().catch(()=>({})); setPub('Erro: '+(e.message||('HTTP '+r.status))); }
   }catch(err){ setPub('Falha de rede: '+err.message); }
