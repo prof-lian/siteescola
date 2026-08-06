@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Horários — Professor de Informática Lian Ribeiro</title>
+<style>
+  :root{
+    --azul:#123a6b;
+    --time:#EFEFEF;
+    --intervalo:#CFCFCF;
+    --g2:#FFF2CC; --g3:#D9EAD3; --g4:#FCE5CD; --g5:#CFE2F3;
+    --linha:#cfcfcf; --texto:#1A1A1A;
+  }
+  *{box-sizing:border-box;}
+  body{
+    min-height:100vh;
+    margin:0;
+    font-family:'Segoe UI', Verdana, sans-serif;
+    color:#fff;
+    background:
+      radial-gradient(circle at 8px 8px, rgba(255,255,255,.10) 2px, transparent 2.5px) 0 0/42px 42px,
+      linear-gradient(160deg, #000 0%, #0a1a3a 35%, #123a6b 100%);
+    background-attachment:fixed;
+    padding-bottom:48px;
+  }
+
+  header{
+    display:flex; align-items:center; justify-content:center;
+    gap:16px; flex-wrap:wrap; text-align:center;
+    padding:34px 20px 6px;
+  }
+  header img{
+    width:76px; height:76px; border-radius:50%;
+    object-fit:cover; border:3px solid #fff;
+    box-shadow:0 8px 18px rgba(0,0,0,.4);
+  }
+  header .titulo{ text-align:left; }
+  header h1{
+    margin:0; font-size:clamp(22px,3.6vw,30px);
+    font-weight:700; letter-spacing:.3px; line-height:1.15;
+  }
+  header .cargo{
+    margin:3px 0 0; font-size:clamp(13px,1.9vw,16px);
+    font-weight:600; letter-spacing:.4px; color:rgba(255,255,255,.82);
+  }
+
+  .legenda{ text-align:center; margin:10px 0 4px; }
+  .legenda span{
+    display:inline-block; margin:4px; padding:3px 13px;
+    border-radius:20px; color:#1a1a1a; font-weight:600; font-size:12.5px;
+  }
+  .lg2{background:var(--g2);} .lg3{background:var(--g3);}
+  .lg4{background:var(--g4);} .lg5{background:var(--g5);}
+
+  main{ max-width:760px; margin:0 auto; padding:6px 16px; }
+
+  .quadro{
+    background:#fff; color:var(--texto);
+    border-radius:16px; padding:18px 20px 22px;
+    margin-top:22px;
+    box-shadow:0 10px 30px rgba(0,0,0,.35);
+  }
+  .dias{ font-size:19px; font-weight:800; color:var(--azul); }
+  .escola{ font-size:13px; color:#666; margin:2px 0 14px; }
+
+  table{ width:100%; border-collapse:collapse; table-layout:fixed; }
+  col.hcol{width:24%;} col.dcol{width:38%;}
+  th,td{
+    border:1px solid var(--linha);
+    text-align:center; padding:11px 6px;
+    font-weight:700; font-size:15px;
+  }
+  thead th{
+    background:var(--azul); color:#fff;
+    padding:12px 6px; letter-spacing:.4px;
+  }
+  td.time{
+    background:var(--time); color:#333;
+    font-weight:600; font-size:13px; white-space:nowrap;
+  }
+  td.g2{background:var(--g2);} td.g3{background:var(--g3);}
+  td.g4{background:var(--g4);} td.g5{background:var(--g5);}
+
+  tr.intervalo td{
+    background:var(--intervalo); color:#333;
+    font-weight:700; font-size:12px; letter-spacing:3px;
+    padding:3px 6px;
+  }
+  tr.intervalo td.time{
+    background:var(--time); letter-spacing:normal;
+    padding:3px 6px; font-size:12px;
+  }
+
+  footer{
+    text-align:center; color:rgba(255,255,255,.75);
+    font-size:12.5px; margin-top:30px; padding:0 16px; line-height:1.6;
+  }
+  footer a{ color:#cfe2f3; text-decoration:none; }
+
+  @media (max-width:520px){
+    th,td{ padding:9px 4px; font-size:13.5px; }
+    td.time{ font-size:11.5px; }
+    .quadro{ padding:16px 14px 18px; }
+  }
+</style>
+</head>
+<body>
+
+  <header>
+    <img src="https://aniversariomariah22.my.canva.site/jgg/_assets/media/e51924df3888b4556d8a33aedcdc2ffc.png" alt="Foto do professor Lian Ribeiro">
+    <div class="titulo">
+      <h1>Lian Ribeiro</h1>
+      <p class="cargo">Professor de Informática</p>
+    </div>
+  </header>
+
+  <div class="legenda">
+    <span class="lg2">2º ano</span><span class="lg3">3º ano</span><span class="lg4">4º ano</span><span class="lg5">5º ano</span>
+  </div>
+
+  <main>
+
+    <!-- SEGUNDA E TERÇA -->
+    <section class="quadro">
+      <div class="dias">Segunda e Terça</div>
+      <div class="escola">Escola Municipal Professor Anísio Teixeira</div>
+      <table>
+        <colgroup><col class="hcol"><col class="dcol"><col class="dcol"></colgroup>
+        <thead>
+          <tr><th>HORÁRIO</th><th>Segunda-feira</th><th>Terça-feira</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="time">12h30 – 13h20</td><td class="g4">4º ANO B</td><td class="g3">3º ANO C</td></tr>
+          <tr><td class="time">13h20 – 14h10</td><td class="g4">4º ANO C</td><td class="g2">2º ANO B</td></tr>
+          <tr><td class="time">14h10 – 14h40</td><td class="g5">5º ANO B</td><td class="g2">2º ANO D</td></tr>
+          <tr class="intervalo"><td class="time">14h40 – 14h55</td><td colspan="2">intervalo</td></tr>
+          <tr><td class="time">14h55 – 15h15</td><td class="g5">5º ANO B</td><td class="g2">2º ANO D</td></tr>
+          <tr><td class="time">15h15 – 16h05</td><td class="g5">5º ANO C</td><td class="g3">3º ANO B</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- QUINTA E SEXTA -->
+    <section class="quadro">
+      <div class="dias">Quinta e Sexta</div>
+      <div class="escola">Escola Municipal Cívico-Militar José Geraldo Guimarães</div>
+      <table>
+        <colgroup><col class="hcol"><col class="dcol"><col class="dcol"></colgroup>
+        <thead>
+          <tr><th>HORÁRIO</th><th>Quinta-feira</th><th>Sexta-feira</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="time">13h00 – 13h50</td><td class="g3">3º ANO E</td><td class="g5">5º ANO E</td></tr>
+          <tr><td class="time">13h50 – 14h40</td><td class="g3">3º ANO F</td><td class="g5">5º ANO F</td></tr>
+          <tr><td class="time">14h40 – 15h00</td><td class="g2">2º ANO G</td><td class="g3">3º ANO D</td></tr>
+          <tr class="intervalo"><td class="time">15h00 – 15h15</td><td colspan="2">intervalo</td></tr>
+          <tr><td class="time">15h15 – 15h45</td><td class="g2">2º ANO G</td><td class="g3">3º ANO D</td></tr>
+          <tr><td class="time">15h45 – 16h35</td><td class="g3">3º ANO C</td><td class="g3">3º ANO A</td></tr>
+          <tr><td class="time">16h35 – 17h25</td><td class="g5">5º ANO D</td><td class="g3">3º ANO B</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+  </main>
+
+  <footer>
+    Dúvidas e informações: <a href="mailto:Lian.ribeiro@edu.uberabadigital.br">Lian.ribeiro@edu.uberabadigital.br</a><br>
+    © 2026 Professor de Informática Lian Ribeiro
+  </footer>
+
+</body>
+</html>
