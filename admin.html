@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<title>Painel do Laboratório · v2 nuvem</title>
+<title>Painel do Laboratório · v3</title>
 <style>
 *{box-sizing:border-box;}
 [hidden]{display:none !important;}
@@ -135,7 +135,6 @@ body{margin:0; font-family:'Segoe UI', Verdana, sans-serif; background:#eef2f7; 
     <div class="toolbar">
       <button id="btnDownload">⬇️ Baixar site (HTML)</button>
       <button id="btnPublicar">🚀 Publicar site</button>
-      <button id="btnConfigPub" class="ghost" title="Configurar publicação">⚙️</button>
       <span id="pubStatus" class="pub-status"></span>
       <input id="labelHist" placeholder="Ex.: Agosto / 2026">
       <button id="btnSalvarHist">💾 Salvar no histórico</button>
@@ -166,23 +165,6 @@ body{margin:0; font-family:'Segoe UI', Verdana, sans-serif; background:#eef2f7; 
   </div>
 </div>
 
-<div id="modalPub" class="modal" hidden>
-  <div class="modal-form">
-    <h3>Configurar publicação (GitHub)</h3>
-    <div class="field"><label>Usuário ou organização</label><input id="pubOwner" placeholder="ex.: lianribeiro"></div>
-    <div class="field"><label>Repositório</label><input id="pubRepo" placeholder="ex.: laboratorio"></div>
-    <div class="row">
-      <div class="field"><label>Branch</label><input id="pubBranch" value="main"></div>
-      <div class="field"><label>Arquivo</label><input id="pubPath" value="index.html"></div>
-    </div>
-    <div class="field"><label>Token (fine-grained, permissão Contents: Read and write)</label><input id="pubToken" type="password" placeholder="github_pat_..."></div>
-    <p class="hint">O token fica salvo só no seu navegador, nunca dentro do arquivo do site.</p>
-    <div class="modal-actions">
-      <button id="pubSave">Salvar</button>
-      <button id="pubCancel" class="ghost">Cancelar</button>
-    </div>
-  </div>
-</div>
 
 </div><!-- /#app -->
 
@@ -516,12 +498,6 @@ function lsSet(k,v){try{localStorage.setItem(k,v);}catch(e){}}
 let pubConfig = (()=>{ try{ return JSON.parse(lsGet('pubConfig'))||{}; }catch(e){ return {}; } })();
 pubConfig = Object.assign({owner:'', repo:'', branch:'main', path:'index.html', token:''}, pubConfig);
 
-const modalPub = document.getElementById('modalPub');
-function openPub(){
-  pubOwner.value=pubConfig.owner; pubRepo.value=pubConfig.repo;
-  pubBranch.value=pubConfig.branch||'main'; pubPath.value=pubConfig.path||'index.html';
-  pubToken.value=pubConfig.token; modalPub.hidden=false;
-}
 function setPub(msg, link){
   const el=document.getElementById('pubStatus');
   if(link){ el.innerHTML=msg+' <a href="'+link+'" target="_blank">abrir site</a>'; }
@@ -531,26 +507,6 @@ function b64utf8(str){
   const bytes=new TextEncoder().encode(str); let bin='';
   bytes.forEach(b=> bin+=String.fromCharCode(b)); return btoa(bin);
 }
-document.getElementById('btnConfigPub').onclick = openPub;
-document.getElementById('pubCancel').onclick = ()=> modalPub.hidden=true;
-document.getElementById('pubSave').onclick = async ()=>{
-  pubConfig = {
-    owner: pubOwner.value.trim(), repo: pubRepo.value.trim(),
-    branch: (pubBranch.value.trim()||'main'), path: (pubPath.value.trim()||'index.html'),
-    token: pubToken.value.trim()
-  };
-  lsSet('pubConfig', JSON.stringify(pubConfig));
-  modalPub.hidden=true; setPub('Salvando na nuvem...');
-  try{
-    await setDoc(doc(db,'config','publicacao'), pubConfig);
-    setPub('✅ Credenciais salvas na nuvem.');
-    alert('Credenciais salvas na nuvem com sucesso!\nAgora funcionam em qualquer navegador depois do login.');
-  }
-  catch(e){
-    setPub('Nuvem falhou: '+e.message);
-    alert('Falha ao salvar na nuvem:\n'+(e.code||'')+' '+e.message);
-  }
-};
 
 async function loadPubConfigFromCloud(){
   try{
@@ -565,7 +521,10 @@ async function loadPubConfigFromCloud(){
 
 async function publish(){
   if(!pubConfig.owner || !pubConfig.repo || !pubConfig.token){ await loadPubConfigFromCloud(); }
-  if(!pubConfig.owner || !pubConfig.repo || !pubConfig.token){ openPub(); return; }
+  if(!pubConfig.owner || !pubConfig.repo || !pubConfig.token){
+    setPub('⚠️ Credenciais não cadastradas no Firebase (coleção config › documento publicacao).');
+    return;
+  }
   setPub('Publicando...');
   const base='https://api.github.com/repos/'+pubConfig.owner+'/'+pubConfig.repo+'/contents/'+pubConfig.path;
   const headers={Authorization:'Bearer '+pubConfig.token, Accept:'application/vnd.github+json'};
