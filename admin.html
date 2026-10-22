@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<title>Painel do Laboratório · v3</title>
+<title>Painel do Laboratório · v4</title>
 <style>
 *{box-sizing:border-box;}
 [hidden]{display:none !important;}
@@ -527,14 +527,22 @@ async function publish(){
   }
   setPub('Publicando...');
   const base='https://api.github.com/repos/'+pubConfig.owner+'/'+pubConfig.repo+'/contents/'+pubConfig.path;
-  const headers={Authorization:'Bearer '+pubConfig.token, Accept:'application/vnd.github+json'};
-  try{
-    let sha=null;
-    const g=await fetch(base+'?ref='+encodeURIComponent(pubConfig.branch), {headers});
-    if(g.status===200){ sha=(await g.json()).sha; }
-    const body={message:'Atualiza site ('+state.mes+')', content:b64utf8(buildSiteHTML(state)), branch:pubConfig.branch};
+  const headers={Authorization:'Bearer '+pubConfig.token, Accept:'application/vnd.github+json', 'Cache-Control':'no-cache'};
+  const content=b64utf8(buildSiteHTML(state));
+  async function getSha(){
+    const g=await fetch(base+'?ref='+encodeURIComponent(pubConfig.branch)+'&_='+Date.now(), {headers, cache:'no-store'});
+    if(g.status===200){ return (await g.json()).sha; }
+    return null;
+  }
+  async function put(sha){
+    const body={message:'Atualiza site ('+state.mes+')', content, branch:pubConfig.branch};
     if(sha) body.sha=sha;
-    const r=await fetch(base, {method:'PUT', headers, body:JSON.stringify(body)});
+    return fetch(base, {method:'PUT', headers, body:JSON.stringify(body)});
+  }
+  try{
+    let sha=await getSha();
+    let r=await put(sha);
+    if(r.status===409 || r.status===422){ sha=await getSha(); r=await put(sha); }
     if(r.ok){
       setPub('✅ Publicado!', 'https://'+pubConfig.owner+'.github.io/'+pubConfig.repo+'/');
       const raw = document.getElementById('labelHist').value.trim();
