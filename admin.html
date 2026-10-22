@@ -3,7 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Painel do Laboratório</title>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>Painel do Laboratório · v2 nuvem</title>
 <style>
 *{box-sizing:border-box;}
 [hidden]{display:none !important;}
@@ -538,8 +541,15 @@ document.getElementById('pubSave').onclick = async ()=>{
   };
   lsSet('pubConfig', JSON.stringify(pubConfig));
   modalPub.hidden=true; setPub('Salvando na nuvem...');
-  try{ await setDoc(doc(db,'config','publicacao'), pubConfig); setPub('✅ Credenciais salvas na nuvem.'); }
-  catch(e){ setPub('Salvo só neste navegador. Nuvem falhou: '+e.message); }
+  try{
+    await setDoc(doc(db,'config','publicacao'), pubConfig);
+    setPub('✅ Credenciais salvas na nuvem.');
+    alert('Credenciais salvas na nuvem com sucesso!\nAgora funcionam em qualquer navegador depois do login.');
+  }
+  catch(e){
+    setPub('Nuvem falhou: '+e.message);
+    alert('Falha ao salvar na nuvem:\n'+(e.code||'')+' '+e.message);
+  }
 };
 
 async function loadPubConfigFromCloud(){
