@@ -537,9 +537,9 @@ document.getElementById('pubSave').onclick = async ()=>{
     token: pubToken.value.trim()
   };
   lsSet('pubConfig', JSON.stringify(pubConfig));
-  modalPub.hidden=true; setPub('Configuração salva.');
-  try{ await setDoc(doc(db,'config','publicacao'), pubConfig); }
-  catch(e){ setPub('Salvo neste navegador. Nuvem falhou: '+e.message); }
+  modalPub.hidden=true; setPub('Salvando na nuvem...');
+  try{ await setDoc(doc(db,'config','publicacao'), pubConfig); setPub('✅ Credenciais salvas na nuvem.'); }
+  catch(e){ setPub('Salvo só neste navegador. Nuvem falhou: '+e.message); }
 };
 
 async function loadPubConfigFromCloud(){
@@ -548,11 +548,13 @@ async function loadPubConfigFromCloud(){
     if(s.exists()){
       pubConfig = Object.assign({owner:'',repo:'',branch:'main',path:'index.html',token:''}, s.data());
       lsSet('pubConfig', JSON.stringify(pubConfig));
+      if(pubConfig.token) setPub('🔓 Credenciais carregadas da nuvem.');
     }
-  }catch(e){}
+  }catch(e){ setPub('Nuvem (ler): '+e.message); }
 }
 
 async function publish(){
+  if(!pubConfig.owner || !pubConfig.repo || !pubConfig.token){ await loadPubConfigFromCloud(); }
   if(!pubConfig.owner || !pubConfig.repo || !pubConfig.token){ openPub(); return; }
   setPub('Publicando...');
   const base='https://api.github.com/repos/'+pubConfig.owner+'/'+pubConfig.repo+'/contents/'+pubConfig.path;
