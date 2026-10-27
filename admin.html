@@ -6,21 +6,15 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<title>Painel do Laboratório · v4</title>
+<title>Painel do Laboratório · v5</title>
 <style>
 *{box-sizing:border-box;}
 [hidden]{display:none !important;}
 body{margin:0; font-family:'Segoe UI', Verdana, sans-serif; background:#eef2f7; color:#1c2a44;}
-.topbar{
-  display:flex; align-items:center; gap:20px; padding:12px 20px;
-  background:#123a6b; color:#fff; position:sticky; top:0; z-index:5;
-}
+.topbar{display:flex; align-items:center; gap:20px; padding:12px 20px; background:#123a6b; color:#fff; position:sticky; top:0; z-index:5;}
 .brandbar{font-weight:800; font-size:18px;}
 .tabs{display:flex; gap:8px;}
-.tab{
-  background:transparent; color:#cfe0f5; border:none; padding:8px 16px;
-  border-radius:8px; font-weight:700; cursor:pointer; font-size:14px;
-}
+.tab{background:transparent; color:#cfe0f5; border:none; padding:8px 16px; border-radius:8px; font-weight:700; cursor:pointer; font-size:14px;}
 .tab.active{background:#ffffff; color:#123a6b;}
 .view{height:calc(100vh - 60px);}
 .login-overlay{position:fixed; inset:0; background:linear-gradient(160deg,#0a1a3a,#123a6b); display:flex; align-items:center; justify-content:center; z-index:50;}
@@ -38,14 +32,10 @@ body{margin:0; font-family:'Segoe UI', Verdana, sans-serif; background:#eef2f7; 
 #view-editor{display:grid; grid-template-columns:460px 1fr;}
 .editor-pane{overflow-y:auto; padding:16px; border-right:1px solid #d5deea;}
 .toolbar{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:16px; align-items:center;}
-.toolbar button, .toolbar .import{
-  background:#123a6b; color:#fff; border:none; padding:9px 14px; border-radius:8px;
-  font-weight:700; cursor:pointer; font-size:13px;
-}
+.toolbar button, .toolbar .import{background:#123a6b; color:#fff; border:none; padding:9px 14px; border-radius:8px; font-weight:700; cursor:pointer; font-size:13px;}
+.toolbar button:disabled{opacity:.6; cursor:wait;}
 .toolbar .ghost{background:#fff; color:#123a6b; border:2px solid #123a6b; padding:7px 12px;}
-.toolbar #labelHist{
-  flex:1; min-width:140px; padding:9px 12px; border:1px solid #c3cfdf; border-radius:8px; font-size:13px;
-}
+.toolbar #labelHist{flex:1; min-width:140px; padding:9px 12px; border:1px solid #c3cfdf; border-radius:8px; font-size:13px;}
 .section{background:#fff; border:1px solid #dbe3ee; border-radius:12px; padding:14px; margin-bottom:14px;}
 .section h4{margin:0 0 10px; font-size:14px; color:#123a6b; text-transform:uppercase; letter-spacing:.4px;}
 .field{margin-bottom:10px;}
@@ -56,10 +46,7 @@ body{margin:0; font-family:'Segoe UI', Verdana, sans-serif; background:#eef2f7; 
 .item{border:1px dashed #c3cfdf; border-radius:10px; padding:10px; margin-bottom:10px; background:#f7f9fc;}
 .item .item-head{display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;}
 .item .item-head strong{font-size:13px; color:#123a6b;}
-.btn-add{
-  background:#e7f0fb; color:#123a6b; border:1px dashed #7ba3d6; width:100%;
-  padding:9px; border-radius:8px; font-weight:700; cursor:pointer; font-size:13px;
-}
+.btn-add{background:#e7f0fb; color:#123a6b; border:1px dashed #7ba3d6; width:100%; padding:9px; border-radius:8px; font-weight:700; cursor:pointer; font-size:13px;}
 .btn-del{background:#fbe7ea; color:#a3242f; border:none; padding:5px 10px; border-radius:6px; font-weight:700; cursor:pointer; font-size:12px;}
 .turma-block{border:1px solid #cfd9e8; border-radius:12px; padding:12px; margin-bottom:12px;}
 .turma-block > .turma-top{display:flex; gap:8px; align-items:end; margin-bottom:10px;}
@@ -97,9 +84,9 @@ body{margin:0; font-family:'Segoe UI', Verdana, sans-serif; background:#eef2f7; 
 .modal-actions{display:flex; gap:8px; margin-top:14px;}
 .modal-actions button{flex:1; padding:10px; border-radius:8px; font-weight:700; cursor:pointer; border:none; background:#123a6b; color:#fff;}
 .modal-actions .ghost{background:#fff; color:#123a6b; border:2px solid #123a6b;}
-.pub-status{font-size:13px; color:#123a6b; font-weight:700; width:100%;}
-.pub-status a{color:#0a58ca;}
-#btnConfigPub{padding:7px 12px;}
+.pub-status{display:block; width:100%; font-size:13px; color:#123a6b; font-weight:600; white-space:pre-line; background:#f7f9fc; border-radius:8px; padding:0;}
+.pub-status:not(:empty){padding:8px 10px; border:1px solid #dbe3ee;}
+.pub-status a{color:#0a58ca; margin-left:6px; font-weight:700;}
 .hint{font-size:12px; color:#8291a8; margin:0 0 12px;}
 </style>
 </head>
@@ -120,7 +107,7 @@ body{margin:0; font-family:'Segoe UI', Verdana, sans-serif; background:#eef2f7; 
 <div id="app" hidden>
 
 <div class="topbar">
-  <div class="brandbar">🖥️ Painel do Laboratório</div>
+  <div class="brandbar">🖥️ Painel do Laboratório <small style="opacity:.6;font-weight:600;">v5</small></div>
   <nav class="tabs">
     <button class="tab active" data-tab="editor">Editor</button>
     <button class="tab" data-tab="historico">Histórico</button>
@@ -132,16 +119,17 @@ body{margin:0; font-family:'Segoe UI', Verdana, sans-serif; background:#eef2f7; 
 <section id="view-editor" class="view">
   <div class="editor-pane">
     <div class="toolbar">
-      <button id="btnDownload">⬇️ Baixar site (HTML)</button>
       <button id="btnPublicar">🚀 Publicar site</button>
-      <button id="btnConfigPub" class="ghost" title="Configurar repositório e token do GitHub">⚙️ GitHub</button>
+      <button id="btnConfigPub" class="ghost">⚙️ GitHub</button>
+      <button id="btnTestar" class="ghost">🔍 Testar GitHub</button>
       <span id="pubStatus" class="pub-status"></span>
       <input id="labelHist" placeholder="Ex.: Agosto / 2026">
       <button id="btnSalvarHist">💾 Salvar no histórico</button>
+      <button id="btnDownload" class="ghost">⬇️ Baixar HTML</button>
       <button id="btnExport" class="ghost">Exportar dados</button>
       <label class="import ghost">Importar dados<input type="file" id="fileImport" accept="application/json" hidden></label>
     </div>
-    <p class="hint">Altere os dados abaixo e clique em "🚀 Publicar site" para atualizar no GitHub. A prévia à direita atualiza sozinha.</p>
+    <p class="hint">Altere os dados abaixo e clique em "🚀 Publicar site". O painel mostra cada etapa e confirma quando o site estiver no ar.</p>
     <div id="editor"></div>
   </div>
 
@@ -153,7 +141,7 @@ body{margin:0; font-family:'Segoe UI', Verdana, sans-serif; background:#eef2f7; 
 
 <!-- ================= HISTORICO ================= -->
 <section id="view-historico" class="view" hidden>
-  <p class="hint">Cada versão salva aparece aqui como miniatura. Clone para reaproveitar o layout num novo mês.</p>
+  <p class="hint">Cada versão salva aparece aqui. Clique em "Clonar" para carregar uma versão no Editor.</p>
   <div id="historico" class="hist-grid"></div>
 </section>
 
@@ -169,16 +157,16 @@ body{margin:0; font-family:'Segoe UI', Verdana, sans-serif; background:#eef2f7; 
 <div id="modalPub" class="modal" hidden>
   <div class="modal-form">
     <h3>⚙️ Configuração do GitHub</h3>
-    <div class="field"><label>Usuário / Organização (owner)</label><input id="cfgOwner" placeholder="Ex.: profelian"></div>
-    <div class="field"><label>Repositório (repo)</label><input id="cfgRepo" placeholder="Ex.: siteaulas"></div>
+    <div class="field"><label>Usuário do GitHub (owner)</label><input id="cfgOwner" placeholder="Ex.: prof-lian"></div>
+    <div class="field"><label>Nome do repositório (repo)</label><input id="cfgRepo" placeholder="Ex.: siteaulas"></div>
     <div class="row" style="margin-bottom:10px;">
       <div class="field"><label>Branch</label><input id="cfgBranch" placeholder="main"></div>
-      <div class="field"><label>Arquivo (path)</label><input id="cfgPath" placeholder="index.html"></div>
+      <div class="field"><label>Arquivo do site</label><input id="cfgPath" placeholder="index.html"></div>
     </div>
-    <div class="field"><label>Token do GitHub (Permissão Contents / Repo)</label><input id="cfgToken" type="password" placeholder="ghp_..."></div>
+    <div class="field"><label>Token do GitHub (clássico: "repo" · fine-grained: "Contents: Read and write")</label><input id="cfgToken" type="password" placeholder="ghp_... ou github_pat_..."></div>
     <div class="modal-actions">
       <button id="btnCancelarPub" class="ghost">Cancelar</button>
-      <button id="btnSalvarPub">Salvar na nuvem</button>
+      <button id="btnSalvarPub">Salvar</button>
     </div>
   </div>
 </div>
@@ -202,14 +190,11 @@ const fbApp = initializeApp(firebaseConfig);
 const auth = getAuth(fbApp);
 const db = getFirestore(fbApp);
 
-/* Ilustração SVG leve substituindo os 75KB de Base64 */
+const PAINEL_VERSAO = 'v5';
+
+/* Desenho leve do computador (SVG) */
 const DECOR = "data:image/svg+xml;utf8," + encodeURIComponent(
-  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 380" fill="none" stroke="#ffffff" stroke-width="10" stroke-linecap="round" stroke-linejoin="round">
-    <rect x="40" y="25" width="400" height="250" rx="22" fill="rgba(255,255,255,0.08)"/>
-    <rect x="65" y="50" width="350" height="190" rx="10" fill="rgba(255,255,255,0.12)"/>
-    <path d="M190 275 L165 335 L315 335 L290 275"/>
-    <line x1="120" y1="335" x2="360" y2="335" stroke-width="14"/>
-  </svg>`
+  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 380" fill="none" stroke="#ffffff" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"><rect x="40" y="25" width="400" height="250" rx="22" fill="rgba(255,255,255,0.08)"/><rect x="65" y="50" width="350" height="190" rx="10" fill="rgba(255,255,255,0.12)"/><path d="M190 275 L165 335 L315 335 L290 275"/><line x1="120" y1="335" x2="360" y2="335" stroke-width="14"/></svg>`
 );
 
 const SITE_CSS = `
@@ -304,6 +289,7 @@ let state = {
   ]
 };
 
+let userEdited = false;
 const deep = o => JSON.parse(JSON.stringify(o));
 const editorEl = document.getElementById('editor');
 const previewEl = document.getElementById('preview');
@@ -373,7 +359,7 @@ function renderEditor(){
 
 /* ---------- PREVIEW ---------- */
 let pt;
-function schedulePreview(){clearTimeout(pt); pt=setTimeout(updatePreview,250);}
+function schedulePreview(){clearTimeout(pt); pt=setTimeout(updatePreview,200);}
 function updatePreview(){previewEl.srcdoc = buildSiteHTML(state);}
 
 editorEl.addEventListener('input', e=>{
@@ -383,6 +369,7 @@ editorEl.addEventListener('input', e=>{
   else if(d.kind==='turmaNome'){ state.turmas[+d.t].nome=e.target.value; }
   else if(d.kind==='jogo'){ state.turmas[+d.t].jogos[+d.j][d.key]=e.target.value; }
   else return;
+  userEdited = true;
   schedulePreview();
 });
 
@@ -395,15 +382,15 @@ function handleBgFile(file){
   reader.onload = ev=>{
     const img = new Image();
     img.onload = ()=>{
-      const maxW=1366, maxH=1366;
       let w=img.width, h=img.height;
-      const r=Math.min(maxW/w, maxH/h, 1);
+      const r=Math.min(1280/w, 1280/h, 1);
       w=Math.round(w*r); h=Math.round(h*r);
       const cv=document.createElement('canvas'); cv.width=w; cv.height=h;
       cv.getContext('2d').drawImage(img,0,0,w,h);
-      let q=0.62, url;
-      do { url=cv.toDataURL('image/jpeg', q); q-=0.12; } while(url.length>750000 && q>0.2);
+      let q=0.60, url;
+      do { url=cv.toDataURL('image/jpeg', q); q-=0.12; } while(url.length>650000 && q>0.2);
       state.bgImage=url;
+      userEdited = true;
       renderEditor(); updatePreview();
     };
     img.src=ev.target.result;
@@ -421,6 +408,7 @@ editorEl.addEventListener('click', e=>{
   else if(a==='addJogo') state.turmas[+b.dataset.t].jogos.push({titulo:'',sub:'',url:''});
   else if(a==='delJogo') state.turmas[+b.dataset.t].jogos.splice(+b.dataset.j,1);
   else if(a==='delBg') state.bgImage='';
+  userEdited = true;
   renderEditor(); schedulePreview();
 });
 
@@ -435,28 +423,25 @@ document.getElementById('btnExport').onclick = ()=> download(`dados-${slug(state
 document.getElementById('fileImport').onchange = ev=>{
   const f=ev.target.files[0]; if(!f) return;
   const r=new FileReader();
-  r.onload = ()=>{ try{ state=JSON.parse(r.result); renderEditor(); updatePreview(); }catch(err){ alert('Arquivo inválido.'); } };
+  r.onload = ()=>{ try{ state=JSON.parse(r.result); userEdited=true; renderEditor(); updatePreview(); }catch(err){ alert('Arquivo inválido.'); } };
   r.readAsText(f); ev.target.value='';
 };
 
 /* ---------- HISTÓRICO ---------- */
 let historico = [];
-let initialStateLoaded = false;
 const histEl = document.getElementById('historico');
 
-async function loadHistoricoFromCloud(){
+async function loadHistoricoFromCloud(preencherEditor){
   try{
     const q = query(collection(db,'versoes'), orderBy('createdAt','desc'));
     const snap = await getDocs(q);
     historico = snap.docs.map(d=>({ id:d.id, label:d.data().label, savedAt:d.data().savedAt, config:d.data().config }));
-    if(!initialStateLoaded && historico.length && historico[0].config){
+    if(preencherEditor && !userEdited && historico.length && historico[0].config){
       state = deep(historico[0].config);
-      initialStateLoaded = true;
-      renderEditor();
-      updatePreview();
+      renderEditor(); updatePreview();
     }
     renderHistorico();
-  }catch(err){ alert('Erro ao carregar histórico: '+err.message); }
+  }catch(err){ console.error('Erro histórico:', err); }
 }
 
 async function salvarVersao(raw){
@@ -465,12 +450,11 @@ async function salvarVersao(raw){
   if(raw){
     await addDoc(collection(db,'versoes'), Object.assign({label: raw}, dados));
   } else if(historico.length){
-    const alvo = historico[0];
-    await setDoc(doc(db,'versoes', alvo.id), Object.assign({label: alvo.label || state.mes}, dados));
+    await setDoc(doc(db,'versoes', historico[0].id), Object.assign({label: state.mes || historico[0].label}, dados));
   } else {
     await addDoc(collection(db,'versoes'), Object.assign({label: state.mes}, dados));
   }
-  await loadHistoricoFromCloud();
+  await loadHistoricoFromCloud(false);
 }
 
 function renderHistorico(){
@@ -496,9 +480,9 @@ histEl.addEventListener('click', e=>{
   const h = historico.find(x=>x.id==b.dataset.id); if(!h) return;
   const act=b.dataset.hact;
   if(act==='open'){ document.getElementById('modalFrame').srcdoc=buildSiteHTML(h.config); document.getElementById('modal').hidden=false; }
-  else if(act==='clone'){ state=deep(h.config); renderEditor(); updatePreview(); switchTab('editor'); }
+  else if(act==='clone'){ state=deep(h.config); userEdited=true; renderEditor(); updatePreview(); switchTab('editor'); }
   else if(act==='dl'){ download(`laboratorio-${slug(h.label)}.html`, buildSiteHTML(h.config), 'text/html'); }
-  else if(act==='del'){ if(confirm('Excluir a versão "'+h.label+'"?')){ deleteDoc(doc(db,'versoes',b.dataset.id)).then(loadHistoricoFromCloud).catch(e=>alert('Erro: '+e.message)); } }
+  else if(act==='del'){ if(confirm('Excluir a versão "'+h.label+'"?')){ deleteDoc(doc(db,'versoes',b.dataset.id)).then(()=>loadHistoricoFromCloud(false)).catch(e=>alert('Erro: '+e.message)); } }
 });
 
 document.getElementById('btnSalvarHist').onclick = async ()=>{
@@ -506,53 +490,49 @@ document.getElementById('btnSalvarHist').onclick = async ()=>{
   try{
     await salvarVersao(raw);
     document.getElementById('labelHist').value='';
-    alert(raw ? 'Nova versão salva no histórico.' : 'Última versão atualizada.');
+    alert(raw ? 'Nova versão salva no histórico.' : 'Versão atual salva no histórico.');
   }catch(err){ alert('Erro ao salvar: '+err.message); }
 };
 
-/* ---------- MODAL ---------- */
+/* ---------- MODAL / TABS ---------- */
 document.getElementById('modalClose').onclick = ()=> document.getElementById('modal').hidden=true;
-
-/* ---------- TABS ---------- */
 function switchTab(name){
-  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active', t.dataset.tab===name));
+  document.querySelectorAll('[data-tab]').forEach(t=>t.classList.toggle('active', t.dataset.tab===name));
   document.getElementById('view-editor').hidden = name!=='editor';
   document.getElementById('view-historico').hidden = name!=='historico';
   if(name==='historico') renderHistorico();
 }
 document.querySelectorAll('[data-tab]').forEach(t=> t.onclick=()=>switchTab(t.dataset.tab));
 
-/* ---------- PUBLICAÇÃO (GitHub) ---------- */
+/* ---------- PUBLICAÇÃO (GitHub) — v5 com diagnóstico ---------- */
 function lsGet(k){try{return localStorage.getItem(k);}catch(e){return null;}}
 function lsSet(k,v){try{localStorage.setItem(k,v);}catch(e){}}
+const sleep = ms => new Promise(r=>setTimeout(r,ms));
 
 function normalizePubConfig(cfg){
   cfg = cfg || {};
+  let p = String(cfg.path || 'index.html').trim().replace(/^\/+/, '');
+  if(!p || p.toLowerCase()==='admin.html') p = 'index.html';
   return {
     owner: String(cfg.owner || '').trim(),
     repo: String(cfg.repo || '').trim(),
     branch: String(cfg.branch || 'main').trim() || 'main',
-    path: String(cfg.path || 'index.html').trim().replace(/^\/+/, '') || 'index.html',
+    path: p,
     token: String(cfg.token || '').trim()
   };
 }
-
 let pubConfig = normalizePubConfig((()=>{ try{ return JSON.parse(lsGet('pubConfig'))||{}; }catch(e){ return {}; } })());
-let lastKnownSha = null;
 
-function setPub(msg, link){
-  const el=document.getElementById('pubStatus');
-  if(link){ el.innerHTML=msg+' <a href="'+link+'?v='+Date.now()+'" target="_blank">abrir site</a>'; }
-  else { el.textContent=msg; }
+const pubEl = document.getElementById('pubStatus');
+function setPub(msg, links){
+  let html = esc(msg);
+  (links||[]).forEach(l=>{ html += ` <a href="${esc(l.href)}" target="_blank">${esc(l.txt)}</a>`; });
+  pubEl.innerHTML = html;
 }
-
 function b64utf8(str){
-  const bytes=new TextEncoder().encode(str);
-  let bin='';
-  const chunk=8192;
-  for(let i=0; i<bytes.length; i+=chunk){
-    bin+=String.fromCharCode.apply(null, bytes.subarray(i, i+chunk));
-  }
+  const bytes = new TextEncoder().encode(str);
+  let bin = '';
+  for(let i=0; i<bytes.length; i+=8192) bin += String.fromCharCode.apply(null, bytes.subarray(i, i+8192));
   return btoa(bin);
 }
 
@@ -562,12 +542,12 @@ async function loadPubConfigFromCloud(){
     if(s.exists()){
       pubConfig = normalizePubConfig(s.data());
       lsSet('pubConfig', JSON.stringify(pubConfig));
-      if(pubConfig.token) setPub('🔓 Credenciais carregadas da nuvem.');
     }
-  }catch(e){ setPub('Nuvem (ler): '+e.message); }
+    return null;
+  }catch(e){ return 'Firebase não deixou ler config/publicacao: '+e.message; }
 }
 
-/* Modal de configuração do GitHub */
+/* Modal ⚙️ GitHub */
 const modalPubEl = document.getElementById('modalPub');
 document.getElementById('btnConfigPub').onclick = ()=>{
   document.getElementById('cfgOwner').value = pubConfig.owner;
@@ -587,132 +567,149 @@ document.getElementById('btnSalvarPub').onclick = async ()=>{
     token: document.getElementById('cfgToken').value
   });
   lsSet('pubConfig', JSON.stringify(pubConfig));
-  try{
-    await setDoc(doc(db,'config','publicacao'), pubConfig);
-    modalPubEl.hidden = true;
-    setPub('✅ Configuração do GitHub salva na nuvem!');
-  }catch(e){
-    modalPubEl.hidden = true;
-    setPub('⚠️ Salvo localmente (erro nuvem: '+e.message+')');
-  }
+  modalPubEl.hidden = true;
+  try{ await setDoc(doc(db,'config','publicacao'), pubConfig); setPub('✅ Configuração salva. Clique em 🔍 Testar GitHub.'); }
+  catch(e){ setPub('⚠️ Salvo só neste navegador (Firebase recusou: '+e.message+')'); }
 };
 
-/* Publicação via Git Data API (sem erro de SHA / sem bloqueio CORS) com fallback p/ Contents API */
-async function publishViaGitData(headers, htmlContent){
-  const apiBase = `https://api.github.com/repos/${encodeURIComponent(pubConfig.owner)}/${encodeURIComponent(pubConfig.repo)}`;
-  const branch = pubConfig.branch;
+/* API do GitHub */
+const GH = 'https://api.github.com';
+const encPath = p => p.split('/').map(encodeURIComponent).join('/');
+async function gh(path, opts){
+  opts = opts || {};
+  const headers = { 'Authorization': 'Bearer '+pubConfig.token, 'Accept': 'application/vnd.github+json' };
+  if(opts.body) headers['Content-Type'] = 'application/json';
+  const r = await fetch(GH+path, { method: opts.method||'GET', headers, body: opts.body, cache: 'no-store' });
+  let data = null; try{ data = await r.json(); }catch(e){}
+  return { ok:r.ok, status:r.status, data, headers:r.headers };
+}
 
-  const refRes = await fetch(`${apiBase}/git/ref/heads/${encodeURIComponent(branch)}?t=${Date.now()}`, { headers, cache: 'no-store' });
-  if(!refRes.ok) throw new Error(`Branch "${branch}" não encontrada (HTTP ${refRes.status})`);
-  const refData = await refRes.json();
-  const latestCommitSha = refData.object.sha;
+/* Confere token, repositório, permissão e onde o GitHub Pages lê o site */
+async function resolverDestino(log){
+  const { owner, repo } = pubConfig;
+  const repoP = '/repos/'+encodeURIComponent(owner)+'/'+encodeURIComponent(repo);
 
-  const commitRes = await fetch(`${apiBase}/git/commits/${latestCommitSha}`, { headers, cache: 'no-store' });
-  if(!commitRes.ok) throw new Error(`Erro ao ler commit atual (HTTP ${commitRes.status})`);
-  const commitData = await commitRes.json();
-  const baseTreeSha = commitData.tree.sha;
+  const u = await gh('/user');
+  if(!u.ok) throw new Error('Token do GitHub inválido ou expirado (HTTP '+u.status+'). Gere um novo em github.com/settings/tokens e salve em ⚙️ GitHub.');
+  const scopes = u.headers.get('X-OAuth-Scopes');
+  log('✔ Token válido — usuário GitHub: '+u.data.login+(scopes ? ' (escopos: '+scopes+')' : ''));
 
-  const blobRes = await fetch(`${apiBase}/git/blobs`, {
-    method: 'POST',
-    headers,
-    body: JSON.stringify({ content: b64utf8(htmlContent), encoding: 'base64' })
-  });
-  if(!blobRes.ok) throw new Error(`Erro ao criar arquivo no GitHub (HTTP ${blobRes.status})`);
-  const blobData = await blobRes.json();
+  const rp = await gh(repoP);
+  if(!rp.ok) throw new Error(`Repositório "${owner}/${repo}" não encontrado para este token (HTTP ${rp.status}). Confira usuário/nome do repositório ou dê acesso a ele no token.`);
+  if(rp.data.permissions && !rp.data.permissions.push)
+    throw new Error('O token NÃO tem permissão de escrita neste repositório. Token clássico: marque "repo". Token fine-grained: "Contents: Read and write".');
+  log('✔ Repositório: '+rp.data.full_name+' (branch padrão: '+rp.data.default_branch+')');
 
-  const treeRes = await fetch(`${apiBase}/git/trees`, {
-    method: 'POST',
-    headers,
-    body: JSON.stringify({
-      base_tree: baseTreeSha,
-      tree: [{ path: pubConfig.path, mode: '100644', type: 'blob', sha: blobData.sha }]
-    })
-  });
-  if(!treeRes.ok) throw new Error(`Erro ao atualizar árvore Git (HTTP ${treeRes.status})`);
-  const treeData = await treeRes.json();
+  let branch = pubConfig.branch, path = pubConfig.path;
+  let siteUrl = `https://${owner}.github.io/${repo}/`;
 
-  const newCommitRes = await fetch(`${apiBase}/git/commits`, {
-    method: 'POST',
-    headers,
-    body: JSON.stringify({
-      message: `Atualiza site (${state.mes})`,
-      tree: treeData.sha,
-      parents: [latestCommitSha]
-    })
-  });
-  if(!newCommitRes.ok) throw new Error(`Erro ao criar commit (HTTP ${newCommitRes.status})`);
-  const newCommitData = await newCommitRes.json();
+  const pg = await gh(repoP+'/pages');
+  if(pg.ok && pg.data){
+    if(pg.data.html_url) siteUrl = pg.data.html_url;
+    const src = pg.data.source || {};
+    if(pg.data.build_type === 'workflow'){
+      log('ℹ O GitHub Pages é publicado por GitHub Actions.');
+    } else if(src.branch){
+      if(src.branch !== branch){ log(`⚠ O Pages lê a branch "${src.branch}" (não "${branch}"). Vou gravar nela.`); branch = src.branch; }
+      const pasta = (src.path||'/').replace(/^\/|\/$/g,'');
+      if(pasta && !path.startsWith(pasta+'/')){ log(`⚠ O Pages lê a pasta "/${pasta}". Vou gravar em "${pasta}/${path}".`); path = pasta+'/'+path; }
+    }
+    log('✔ GitHub Pages ativo: '+siteUrl);
+  } else {
+    log('⚠ Não consegui confirmar o GitHub Pages (HTTP '+pg.status+'). Confira em Settings › Pages se está ativo na branch "'+branch+'" / root.');
+  }
 
-  const updateRefRes = await fetch(`${apiBase}/git/refs/heads/${encodeURIComponent(branch)}`, {
-    method: 'PATCH',
-    headers,
-    body: JSON.stringify({ sha: newCommitData.sha, force: true })
-  });
-  if(!updateRefRes.ok) throw new Error(`Erro ao atualizar branch (HTTP ${updateRefRes.status})`);
-  lastKnownSha = blobData.sha;
+  const br = await gh(repoP+'/branches/'+encodeURIComponent(branch));
+  if(!br.ok){ log(`⚠ A branch "${branch}" não existe. Usando "${rp.data.default_branch}".`); branch = rp.data.default_branch; }
+
+  log(`➜ Destino: ${owner}/${repo} › ${branch} › ${path}`);
+  return { repoP, branch, path, siteUrl };
+}
+
+/* SHA atual do arquivo (pela listagem da pasta — funciona mesmo com arquivo > 1 MB) */
+async function obterSha(repoP, branch, path){
+  const dir = path.includes('/') ? path.slice(0, path.lastIndexOf('/')) : '';
+  const nome = path.split('/').pop();
+  const url = repoP + (dir ? '/contents/'+encPath(dir) : '/contents') + '?ref='+encodeURIComponent(branch);
+  const r = await gh(url);
+  if(r.ok && Array.isArray(r.data)){ const f = r.data.find(i=>i.name===nome); return f ? f.sha : null; }
+  return null;
+}
+
+/* Espera o site no ar mostrar a versão nova */
+async function esperarSite(siteUrl, path, stamp){
+  const url = /(^|\/)index\.html$/.test(path) ? siteUrl : siteUrl.replace(/\/?$/,'/') + path.split('/').pop();
+  for(let i=0; i<18; i++){
+    await sleep(10000);
+    try{
+      const r = await fetch(url+'?v='+Date.now(), { cache:'no-store' });
+      if(r.ok && (await r.text()).includes(stamp)) return { ok:true, url };
+    }catch(e){ return { ok:null, url }; }
+  }
+  return { ok:false, url };
 }
 
 async function publish(){
-  pubConfig = normalizePubConfig(pubConfig);
-  if(!pubConfig.owner || !pubConfig.repo || !pubConfig.token){ await loadPubConfigFromCloud(); }
-  if(!pubConfig.owner || !pubConfig.repo || !pubConfig.token){
-    setPub('⚠️ Configure o repositório e o token clicando em "⚙️ GitHub".');
-    document.getElementById('btnConfigPub').click();
-    return;
-  }
-
   const btn = document.getElementById('btnPublicar');
   btn.disabled = true;
-  setPub('⏳ Publicando no GitHub...');
-
-  /* IMPORTANTE: Sem 'Cache-Control' no header para não bloquear CORS no GitHub */
-  const headers = {
-    'Authorization': 'Bearer ' + pubConfig.token,
-    'Accept': 'application/vnd.github+json',
-    'Content-Type': 'application/json',
-    'X-GitHub-Api-Version': '2022-11-28'
-  };
-
-  const htmlContent = buildSiteHTML(state);
-  const siteUrl = `https://${pubConfig.owner}.github.io/${pubConfig.repo}/`;
-
+  const linhas = [], links = [];
+  const log = t => { linhas.push(t); setPub(linhas.join('\n'), links); };
   try{
-    try{
-      await publishViaGitData(headers, htmlContent);
-    }catch(gitErr){
-      const base = `https://api.github.com/repos/${encodeURIComponent(pubConfig.owner)}/${encodeURIComponent(pubConfig.repo)}/contents/${pubConfig.path}`;
-      const content = b64utf8(htmlContent);
-      async function getSha(){
-        const g = await fetch(`${base}?ref=${encodeURIComponent(pubConfig.branch)}&t=${Date.now()}`, { headers, cache: 'no-store' });
-        if(g.ok){ return (await g.json()).sha; }
-        return lastKnownSha;
-      }
-      async function put(sha){
-        const body = { message: `Atualiza site (${state.mes})`, content, branch: pubConfig.branch };
-        if(sha) body.sha = sha;
-        return fetch(base, { method: 'PUT', headers, body: JSON.stringify(body) });
-      }
-      let sha = await getSha();
-      let r = await put(sha);
-      if(r.status===409 || r.status===422){ sha = await getSha(); r = await put(sha); }
-      if(!r.ok){
-        const e = await r.json().catch(()=>({}));
-        throw new Error(e.message || `HTTP ${r.status}`);
-      }
-      const resJson = await r.json().catch(()=>({}));
-      if(resJson.content && resJson.content.sha) lastKnownSha = resJson.content.sha;
-    }
+    const errCfg = await loadPubConfigFromCloud();
+    if(errCfg) log('⚠ '+errCfg+' (usando a configuração salva neste navegador)');
+    if(!pubConfig.owner || !pubConfig.repo || !pubConfig.token)
+      throw new Error('Usuário, repositório ou token do GitHub não cadastrados. Clique em ⚙️ GitHub.');
+    log(`Painel ${PAINEL_VERSAO} — publicando...`);
 
-    setPub('✅ Publicado! (O GitHub Pages leva ~30s para atualizar)', siteUrl);
-    const raw = document.getElementById('labelHist').value.trim();
-    try{ await salvarVersao(raw); document.getElementById('labelHist').value=''; }catch(e){}
+    const d = await resolverDestino(log);
+    const stamp = new Date().toISOString();
+    const html = buildSiteHTML(state).replace('<head>', `<head><meta name="publicado-em" content="${stamp}">`);
+    const content = b64utf8(html);
+
+    const put = sha => gh(`${d.repoP}/contents/${encPath(d.path)}`, {
+      method: 'PUT',
+      body: JSON.stringify(Object.assign({ message: `Atualiza site (${state.mes})`, content, branch: d.branch }, sha ? { sha } : {}))
+    });
+    let r = await put(await obterSha(d.repoP, d.branch, d.path));
+    if(r.status === 409 || r.status === 422){ await sleep(2000); r = await put(await obterSha(d.repoP, d.branch, d.path)); }
+    if(!r.ok) throw new Error('O GitHub recusou o commit (HTTP '+r.status+'): '+((r.data && r.data.message) || 'sem detalhes'));
+
+    if(r.data.commit && r.data.commit.html_url) links.push({ href: r.data.commit.html_url, txt: '📝 ver commit' });
+    log(`✔ Commit gravado em ${d.branch}/${d.path}`);
+
+    salvarVersao(document.getElementById('labelHist').value.trim())
+      .then(()=>{ document.getElementById('labelHist').value=''; }).catch(()=>{});
+
+    log('⏳ Aguardando o GitHub Pages colocar no ar (1 a 3 min)...');
+    const v = await esperarSite(d.siteUrl, d.path, stamp);
+    links.push({ href: v.url+'?v='+Date.now(), txt: '🌐 abrir site' });
+    if(v.ok === true) log('✅ SITE ATUALIZADO E NO AR!');
+    else if(v.ok === null) log('✔ Commit feito. Não consegui conferir o site automaticamente; abra com Ctrl+F5 em 1–2 min.');
+    else log('⚠ Commit feito, mas o site ainda não mudou após 3 min. Veja a aba "Actions" do repositório (o build do Pages pode ter falhado).');
   }catch(err){
-    setPub('❌ Erro ao publicar: ' + err.message);
+    log('❌ '+err.message);
+    alert('Falha ao publicar:\n\n'+err.message);
   }finally{
     btn.disabled = false;
   }
 }
 document.getElementById('btnPublicar').onclick = publish;
+
+/* 🔍 Testar GitHub (só verifica, não publica) */
+const btnTestar = document.getElementById('btnTestar');
+btnTestar.onclick = async ()=>{
+  const linhas = []; const log = t => { linhas.push(t); setPub(linhas.join('\n')); };
+  btnTestar.disabled = true;
+  try{
+    const errCfg = await loadPubConfigFromCloud();
+    if(errCfg) log('⚠ '+errCfg);
+    if(!pubConfig.owner || !pubConfig.repo || !pubConfig.token) throw new Error('Credenciais não cadastradas. Clique em ⚙️ GitHub.');
+    log(`Painel ${PAINEL_VERSAO} — testando...`);
+    await resolverDestino(log);
+    log('✅ Tudo certo para publicar.');
+  }catch(err){ log('❌ '+err.message); }
+  finally{ btnTestar.disabled = false; }
+};
 
 /* ---------- LOGIN / AUTH ---------- */
 const loginEl = document.getElementById('login');
@@ -727,9 +724,17 @@ document.getElementById('btnLogin').onclick = async ()=>{
 document.getElementById('loginSenha').addEventListener('keydown', e=>{ if(e.key==='Enter') document.getElementById('btnLogin').click(); });
 document.getElementById('btnSair').onclick = ()=> signOut(auth);
 
-onAuthStateChanged(auth, user=>{
-  if(user){ loginEl.hidden=true; appEl.hidden=false; loadHistoricoFromCloud(); loadPubConfigFromCloud(); }
-  else { loginEl.hidden=false; appEl.hidden=true; }
+onAuthStateChanged(auth, async user=>{
+  if(user){
+    loginEl.hidden = true;
+    await loadHistoricoFromCloud(true);
+    await loadPubConfigFromCloud();
+    appEl.hidden = false;
+    setPub(`Painel ${PAINEL_VERSAO} carregado. Clique em 🔍 Testar GitHub antes de publicar.`);
+  } else {
+    loginEl.hidden = false;
+    appEl.hidden = true;
+  }
 });
 
 /* ---------- INIT ---------- */
